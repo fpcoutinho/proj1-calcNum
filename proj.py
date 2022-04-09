@@ -11,16 +11,16 @@ import pandas as pd
 while True:
     try:
         distancia = float(input("Digite a distância da cobrança para o gol (em m):"))
-        if distancia <= 16.5:
+        if distancia <= 16.5 or distancia >= 45:
             raise ValueError
 
         v0 = float(input("Digite a velocidade (em km/h):"))
-        if v0 <= 0:
+        if v0 <= 0 or v0 > 140:
             raise ValueError
 
         break
     except ValueError:
-        print("Valor inválido! Favor informar somente valores positivos para a velocidade e ângulos entre 0 e 90 graus")
+        print("Valor inválido! Favor informar somente valores positivos para a velocidade e distância entre 16.5 e 45 metros.")
 
 g = 9.8
 v0 = v0/3.6
