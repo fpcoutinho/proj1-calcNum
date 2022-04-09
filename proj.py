@@ -30,7 +30,7 @@ def calculaChute(velocidade, distancia):
     # centroBola = diametroBola / 2
     # melhorPosicaoSobTravePraChute = alturaTrave - centroBola
     tol = 1e-3
-    muvD = lambda tn: hMax + (velocidade * np.sin(angGraus)) * tn + (g * tn ** 2) / 2
+    muvD = lambda tn: distancia + (velocidade * np.sin(angGraus)) * tn + (g * tn ** 2) / 2
     muvV = lambda tn: (velocidade * np.sin(angGraus)) + g * tn
     ## metodo de newton
     tq0 = tempoTotal/2
