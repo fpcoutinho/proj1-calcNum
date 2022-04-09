@@ -39,6 +39,8 @@ def calculaChute(velocidade, distancia):
     print("Duração do lançamento:", tempoTotal, "segundos")
     print("***")
 
+    pp.figure()
+    pp.grid()
     pp.title("Trajetória do Projétil")
     pp.xlabel("Distância (m)")
     pp.ylabel("Altura (m)")
