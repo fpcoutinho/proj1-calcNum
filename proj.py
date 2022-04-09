@@ -7,50 +7,65 @@ import pandas as pd
 # altura do pulo médio dos jogadores mais altura média deles = 2.5m
 # se até 9.14m a altura não for maior que 2.5, a bola vai bater na barreira
 
+def calculaChute(velocidade, distancia):
+    g = 9.8
+    v0 = velocidade/3.6
+    seno = g*distancia/(v0**2)
 
-while True:
     try:
-        distancia = float(input("Digite a distância da cobrança para o gol (em m):"))
-        if distancia <= 16.5 or distancia >= 45:
+        if(seno>1 or seno <-1):
             raise ValueError
-
-        v0 = float(input("Digite a velocidade (em km/h):"))
-        if v0 <= 0:
-            raise ValueError
-
-        break
     except ValueError:
-        print("Valor inválido! Favor informar somente valores positivos para a velocidade e distância entre 16.5 e 45 metros.")
+        print("Cobrança pra fora!")
+        return
 
-g = 9.8
-v0 = v0/3.6
-angRad = math.asin((g*distancia/(v0**2)))/2
-angGraus = math.degrees(angRad)
+    angRad = math.asin(seno)/2
+    angGraus = math.degrees(angRad)
 
-hMax = round((v0 **2) * (np.sin(angRad)) **2 / (2 * g), 1)
-tempoTotal = round((((2 * v0) * np.sin(angRad)) / g), 1)
-
+    hMax = round((v0 **2) * (np.sin(angRad)) **2 / (2 * g), 1)
+    tempoTotal = round((((2 * v0) * np.sin(angRad)) / g), 1)
 
 
-t = np.arange(0, tempoTotal, 0.1)
 
-x = abs(v0) * np.cos(angRad) * t
-y = (abs(v0) * np.sin(angRad) * t) - ((g * (t ** 2)) / 2)
+    t = np.arange(0, tempoTotal, 0.1)
 
-print("\n\n\n***")
-print("Ângulo do chute:", angGraus, "graus")
-print("Altura máxima:", hMax, "metros")
-print("Duração do lançamento:", tempoTotal, "segundos")
-print("***")
+    x = abs(v0) * np.cos(angRad) * t
+    y = (abs(v0) * np.sin(angRad) * t) - ((g * (t ** 2)) / 2)
 
-pp.title("Trajetória do Projétil")
-pp.xlabel("Distância (m)")
-pp.ylabel("Altura (m)")
-pp.annotate("Barreira",
+    print("\n\n\n***")
+    print("Ângulo do chute:", angGraus, "graus")
+    print("Altura máxima:", hMax, "metros")
+    print("Duração do lançamento:", tempoTotal, "segundos")
+    print("***")
+
+    pp.title("Trajetória do Projétil")
+    pp.xlabel("Distância (m)")
+    pp.ylabel("Altura (m)")
+    pp.annotate("Barreira",
             xy=(9.14, 2.5),
             xycoords='data',
             xytext=(9, 2.55),
             textcoords='data')
-pp.bar(9.14, 2.5)
-pp.plot(x, y)
-pp.show()
+    pp.bar(9.14, 2.5)
+    pp.plot(x, y)
+    pp.show()
+
+
+def main():
+    while True:
+        try:
+            distancia = float(input("Digite a distância da cobrança para o gol (em m):"))
+            if distancia <= 16.5 or distancia >= 45:
+                raise ValueError
+
+            v0 = float(input("Digite a velocidade (em km/h):"))
+            if v0 <= 0:
+                raise ValueError
+
+            break
+        except ValueError:
+            print("Valor inválido! Favor informar somente valores positivos para a velocidade e distância entre 16.5 e 45 metros.")
+    calculaChute(v0, distancia)
+
+if __name__ == "__main__":
+    main()
