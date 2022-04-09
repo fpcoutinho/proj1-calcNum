@@ -9,28 +9,49 @@ import pandas as pd
 
 def calculaChute(velocidade, distancia):
     g = 9.8
-    v0 = velocidade/3.6
-    seno = g*distancia/(v0**2)
+    v0 = velocidade / 3.6
+    seno = g * distancia / (v0 ** 2)
 
     try:
-        if(seno>1 or seno <-1):
+        if (seno > 1 or seno < -1):
             raise ValueError
     except ValueError:
         print("Cobrança pra fora!")
         return
 
-    angRad = math.asin(seno)/2
+    angRad = math.asin(seno) / 2
     angGraus = math.degrees(angRad)
 
-    hMax = round((v0 **2) * (np.sin(angRad)) **2 / (2 * g), 1)
+    hMax = round((v0 ** 2) * (np.sin(angRad)) ** 2 / (2 * g), 1)
     tempoTotal = round((((2 * v0) * np.sin(angRad)) / g), 1)
-    
-    #tempo da bola até chegar na altura necessaria para ficar fora do alcance do goleiro
-    t2 = 2.15/(np.sin(angRad)*v0)
+    # alturaBarreira = 2.5
+    # alturaTrave = 2.44
+    # diametroBola = 0.22
+    # centroBola = diametroBola / 2
+    # melhorPosicaoSobTravePraChute = alturaTrave - centroBola
+    tol = 1e-3
+    muvD = lambda tn: distancia + (velocidade * np.sin(angGraus)) * tn + (g * tn ** 2) / 2
+    muvV = lambda tn: (velocidade * np.sin(angGraus)) + g * tn
+    ## metodo de newton
+    tq0 = tempoTotal/2
+
+    while True:
+        iterator = 0
+        tq1 = tq0 - (muvD(tq0) / muvV(tq0))
+
+        print("tn1 =", abs(tq1))
+        if tq1 - tq0 <= tol:
+            break
+        tq0 = tq1
+        print("iteracao", iterator)
+        iterator + 1
+
+    # tempo da bola até chegar na altura necessaria para ficar fora do alcance do goleiro
+    t2 = 2.15 / (np.sin(angRad) * v0)
 
     t = np.arange(0, tempoTotal - t2, 0.1)
 
-    x = abs(v0) * np.cos(angRad) * t + (np.cos(angRad)*v0*t2)
+    x = abs(v0) * np.cos(angRad) * t + (np.cos(angRad) * v0 * t2)
     y = (abs(v0) * np.sin(angRad) * t) - ((g * (t ** 2)) / 2)
 
     print("\n\n\n***")
