@@ -25,11 +25,11 @@ def calculaChute(velocidade, distancia):
     hMax = round((v0 **2) * (np.sin(angRad)) **2 / (2 * g), 1)
     tempoTotal = round((((2 * v0) * np.sin(angRad)) / g), 1)
 
+    t2 = 2.15/(np.sin(angRad)*v0)
 
+    t = np.arange(0, tempoTotal - t2, 0.1)
 
-    t = np.arange(0, tempoTotal, 0.1)
-
-    x = abs(v0) * np.cos(angRad) * t
+    x = abs(v0) * np.cos(angRad) * t + (np.cos(angRad)*v0*t2)
     y = (abs(v0) * np.sin(angRad) * t) - ((g * (t ** 2)) / 2)
 
     print("\n\n\n***")
@@ -41,12 +41,10 @@ def calculaChute(velocidade, distancia):
     pp.title("Trajetória do Projétil")
     pp.xlabel("Distância (m)")
     pp.ylabel("Altura (m)")
-    pp.annotate("Barreira",
-            xy=(9.14, 2.5),
-            xycoords='data',
-            xytext=(9, 2.55),
-            textcoords='data')
+    pp.annotate("Barreira", xy=(9.14, 2.5), xycoords='data', xytext=(9, 2.55), textcoords='data')
     pp.bar(9.14, 2.5)
+    pp.annotate("Gol [2,44m]", xy=(40, 2.44), xycoords='data', xytext=(40, 2.50), textcoords='data')
+    pp.bar(40, 2.44)
     pp.plot(x, y)
     pp.show()
 
