@@ -64,8 +64,10 @@ def main():
 
             break
         except ValueError:
-            print("Valor inválido! Favor informar somente valores positivos para a velocidade e distância entre 16.5 e 45 metros.")
+            print("Valor inválido! Favor informar somente valores positivos"
+                  " para a velocidade e distância entre 16.5 e 45 metros.")
     calculaChute(v0, distancia)
+
 
 if __name__ == "__main__":
     main()
