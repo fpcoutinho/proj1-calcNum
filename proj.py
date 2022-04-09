@@ -15,7 +15,7 @@ while True:
             raise ValueError
 
         v0 = float(input("Digite a velocidade (em km/h):"))
-        if v0 <= 0 or v0 > 140:
+        if v0 <= 0:
             raise ValueError
 
         break
