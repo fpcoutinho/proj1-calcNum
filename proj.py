@@ -39,7 +39,7 @@ def calculaChute(velocidade, distancia):
         iterator = 0
         tq1 = tq0 - (muvD(tq0) / muvV(tq0))
 
-        print("tn1 =", abs(tq1))
+        print("tq1 =", abs(tq1))
         if tq1 - tq0 <= tol:
             break
         tq0 = tq1
