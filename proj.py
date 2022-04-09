@@ -42,7 +42,7 @@ def calculaChute(velocidade, distancia):
     pp.title("Trajetória do Projétil")
     pp.xlabel("Distância (m)")
     pp.ylabel("Altura (m)")
-    pp.annotate("Barreira", xy=(9.14, 2.5), xycoords='data', xytext=(9, 2.55), textcoords='data')
+    pp.annotate("Barreira [2,5m]", xy=(9.14, 2.5), xycoords='data', xytext=(9, 2.55), textcoords='data')
     pp.bar(9.14, 2.5)
     pp.annotate("Gol [2,44m]", xy=(40, 2.44), xycoords='data', xytext=(40, 2.50), textcoords='data')
     pp.bar(40, 2.44)
