@@ -24,7 +24,8 @@ def calculaChute(velocidade, distancia):
 
     hMax = round((v0 **2) * (np.sin(angRad)) **2 / (2 * g), 1)
     tempoTotal = round((((2 * v0) * np.sin(angRad)) / g), 1)
-
+    
+    #tempo da bola até chegar na altura necessaria para ficar fora do alcance do goleiro
     t2 = 2.15/(np.sin(angRad)*v0)
 
     t = np.arange(0, tempoTotal - t2, 0.1)
