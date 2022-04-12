@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as pp
 import math
-import pandas as pd
 
 # distancia da bola para a barreira no tiro livre = 9.14m
 # altura do pulo médio dos jogadores mais altura média deles = 2.5m
@@ -10,14 +9,29 @@ import pandas as pd
 def calculaChute(velocidade, distancia):
     g = 9.8
     v0 = velocidade/3.6
-    seno = g*distancia/(v0**2)
+    seno = g*(distancia)/(v0**2)
 
     try:
-        if(seno>1 or seno <-1):
+        if(seno>1 or seno <0):
             raise ValueError
     except ValueError:
         print("Cobrança pra fora!")
         return
+
+    angRad = math.asin(seno)/2
+
+    #tempo da bola até chegar na altura necessaria para ficar fora do alcance do goleiro.
+    t2 = 2.1/(np.sin(angRad)*v0)
+    #renovação das variaveis a partir da mudança de distância, devido a altura necessaria de chegada no gol.
+    seno = g*(distancia+(np.cos(angRad)*v0*t2))/(v0**2)
+
+    try:
+        if(seno>1 or seno <0):
+            raise ValueError
+    except ValueError:
+        print("Cobrança pra fora!")
+        return
+
 
     angRad = math.asin(seno)/2
     angGraus = math.degrees(angRad)
@@ -26,11 +40,10 @@ def calculaChute(velocidade, distancia):
     tempoTotal = round((((2 * v0) * np.sin(angRad)) / g), 1)
     
     #tempo da bola até chegar na altura necessaria para ficar fora do alcance do goleiro
-    t2 = 2.15/(np.sin(angRad)*v0)
+    
+    t = np.arange(0, tempoTotal, 0.051)
 
-    t = np.arange(0, tempoTotal - t2, 0.1)
-
-    x = abs(v0) * np.cos(angRad) * t + (np.cos(angRad)*v0*t2)
+    x = abs(v0) * np.cos(angRad) * (t)
     y = (abs(v0) * np.sin(angRad) * t) - ((g * (t ** 2)) / 2)
 
     print("\n\n\n***")
@@ -41,13 +54,14 @@ def calculaChute(velocidade, distancia):
 
     pp.figure()
     pp.grid()
-    pp.title("Trajetória do Projétil")
+    pp.title("Trajetória da Bola")
     pp.xlabel("Distância (m)")
     pp.ylabel("Altura (m)")
     pp.annotate("Barreira [2,5m]", xy=(9.14, 2.5), xycoords='data', xytext=(9, 2.55), textcoords='data')
     pp.bar(9.14, 2.5)
     pp.annotate("Gol [2,44m]", xy=(distancia, 2.44), xycoords='data', xytext=(distancia, 2.50), textcoords='data')
     pp.bar(distancia, 2.44)
+    pp.bar(distancia, 2.1)
     pp.plot(x, y)
     pp.show()
 
