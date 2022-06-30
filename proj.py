@@ -1,10 +1,32 @@
+import pandas as pd
 import numpy as np
-import matplotlib.pyplot as pp
+import matplotlib.pyplot as plt
+import numpy as np
 import math
 
-# distancia da bola para a barreira no tiro livre = 9.14m
-# altura do pulo médio dos jogadores mais altura média deles = 2.5m
-# se até 9.14m a altura não for maior que 2.5, a bola vai bater na barreira
+def MetodoNewton(x,y,xi):
+  #lendo tamanho de x para criação da matriz
+  n = len(x)
+  #criação da matriz(Tabela de diferenças divididas)
+  matriz = [[None for x in range(n)] for x in range(n)]
+
+  for i in range(n):
+    matriz[i][0] = y[i]
+
+  #Implementação da formula de diferença dividida para ser adicionanada na matriz
+  for j in range(1,n):
+    for i in range(n-j):
+      matriz[i][j] = (matriz[i+1][j-1] - matriz[i][j-1])/(x[i+j]-x[i])
+
+  #interpolação em xi a partir do metodo de Newton
+  xterm = 1
+  #Variável acumuladora:
+  yp  = matriz[0][0]
+  for ordem in range(1,n):
+    xterm = xterm*(xi - x[ordem-1])
+    yp  = yp + matriz[0][ordem]*xterm
+  
+  return yp
 
 def calculaChute(velocidade, distancia):
     g = 9.8
@@ -32,14 +54,16 @@ def calculaChute(velocidade, distancia):
         print("Cobrança pra fora!")
         return
 
-
+    
     angRad = math.asin(seno)/2
     angGraus = math.degrees(angRad)
-
     hMax = round((v0 **2) * (np.sin(angRad)) **2 / (2 * g), 1)
     tempoTotal = round((((2 * v0) * np.sin(angRad)) / g), 1)
     
-    t = np.arange(0, tempoTotal, 0.05)
+
+    #tempo da bola até chegar na altura necessaria para ficar fora do alcance do goleiro
+    
+    t = np.arange(0, tempoTotal, 0.051)
 
     x = abs(v0) * np.cos(angRad) * (t)
     y = (abs(v0) * np.sin(angRad) * t) - ((g * (t ** 2)) / 2)
@@ -50,23 +74,40 @@ def calculaChute(velocidade, distancia):
     print("Duração do lançamento:", tempoTotal, "segundos")
     print("***")
 
-    pp.figure()
-    pp.grid()
-    pp.title("Trajetória da Bola")
-    pp.xlabel("Distância (m)")
-    pp.ylabel("Altura (m)")
-    pp.annotate("Barreira [2,5m]", xy=(9.14, 2.5), xycoords='data', xytext=(9, 2.55), textcoords='data')
-    pp.bar(9.14, 2.5)
-    pp.annotate("Gol [2,44m]", xy=(distancia, 2.44), xycoords='data', xytext=(distancia, 2.50), textcoords='data')
-    pp.bar(distancia, 2.44)
-    pp.bar(distancia, 2.1)
-    pp.plot(x, y)
-    pp.show()
+    plt.figure()
+    plt.grid()
+    plt.title("Trajetória da Bola")
+    plt.xlabel("Distância (m)")
+    plt.ylabel("Altura (m)")
+    plt.annotate("Barreira [2,5m]", xy=(9.14, 2.5), xycoords='data', xytext=(9, 2.55), textcoords='data')
+    plt.bar(9.14, 2.5)
+    plt.annotate("Gol [2,44m]", xy=(distancia, 2.44), xycoords='data', xytext=(distancia, 2.50), textcoords='data')
+    plt.bar(distancia, 2.44)
+    plt.bar(distancia, 2.1)
+    plt.plot(x, y, 'r')
+    
+    #Variáveis para interpolação
+    xBarreira = 9.14
+    yBarreira = 2.7
+    hGol = 2.15
+    xhMax = (tempoTotal*np.cos(angRad)*v0)/2
 
-
+    x1  = [0.0,xBarreira,xhMax, distancia]
+    y1  = [0.0,yBarreira,hMax,hGol]
+    xp = 0.5
+    yp = MetodoNewton(x1,y1,xp) 
+    t1  = np.arange(0, distancia, 0.1)
+    yt = []
+    for i in t1:
+      yt.append(MetodoNewton(x1,y1,i))
+    plt.plot(t1,yt,'b-')
+    plt.plot(x1,y1,'o')
+    plt.plot(xp,yp,'-g')
+    plt.grid()
+    plt.show()
 def main():
     while True:
-        try:
+        try:           
             distancia = float(input("Digite a distância da cobrança para o gol (em m):"))
             if distancia <= 16.5 or distancia >= 45:
                 raise ValueError
@@ -80,7 +121,5 @@ def main():
             print("Valor inválido! Favor informar somente valores positivos"
                   " para a velocidade e distância entre 16.5 e 45 metros.")
     calculaChute(v0, distancia)
-
-
 if __name__ == "__main__":
     main()
